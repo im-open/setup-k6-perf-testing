@@ -23,7 +23,7 @@ runs:
       id: tune_os
       shell: bash
       run: |
-        echo Optimizing OS for Stress Test
+        echo "Optimizing OS for Stress Test"
         sudo cp -fr /etc/security/limits.conf /etc/security/limits.conf.bk
         sudo sed -i "s/65536/1048576/" /etc/security/limits.conf
         sudo sysctl -w net.ipv4.tcp_tw_reuse=1
