@@ -12,6 +12,82 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
+// node_modules/dotenv/lib/main.js
+var require_main = __commonJS({
+  "node_modules/dotenv/lib/main.js"(exports2, module2) {
+    var fs2 = require("fs");
+    var path2 = require("path");
+    var os3 = require("os");
+    function log(message) {
+      console.log(`[dotenv][DEBUG] ${message}`);
+    }
+    var NEWLINE = "\n";
+    var RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/;
+    var RE_NEWLINES = /\\n/g;
+    var NEWLINES_MATCH = /\r\n|\n|\r/;
+    function parse(src, options) {
+      const debug = Boolean(options && options.debug);
+      const obj = {};
+      src.toString().split(NEWLINES_MATCH).forEach(function(line, idx) {
+        const keyValueArr = line.match(RE_INI_KEY_VAL);
+        if (keyValueArr != null) {
+          const key = keyValueArr[1];
+          let val = keyValueArr[2] || "";
+          const end = val.length - 1;
+          const isDoubleQuoted = val[0] === '"' && val[end] === '"';
+          const isSingleQuoted = val[0] === "'" && val[end] === "'";
+          if (isSingleQuoted || isDoubleQuoted) {
+            val = val.substring(1, end);
+            if (isDoubleQuoted) {
+              val = val.replace(RE_NEWLINES, NEWLINE);
+            }
+          } else {
+            val = val.trim();
+          }
+          obj[key] = val;
+        } else if (debug) {
+          log(`did not match key and value when parsing line ${idx + 1}: ${line}`);
+        }
+      });
+      return obj;
+    }
+    function resolveHome(envPath) {
+      return envPath[0] === "~" ? path2.join(os3.homedir(), envPath.slice(1)) : envPath;
+    }
+    function config(options) {
+      let dotenvPath = path2.resolve(process.cwd(), ".env");
+      let encoding = "utf8";
+      let debug = false;
+      if (options) {
+        if (options.path != null) {
+          dotenvPath = resolveHome(options.path);
+        }
+        if (options.encoding != null) {
+          encoding = options.encoding;
+        }
+        if (options.debug != null) {
+          debug = true;
+        }
+      }
+      try {
+        const parsed = parse(fs2.readFileSync(dotenvPath, { encoding }), { debug });
+        Object.keys(parsed).forEach(function(key) {
+          if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
+            process.env[key] = parsed[key];
+          } else if (debug) {
+            log(`"${key}" is already defined in \`process.env\` and will not be overwritten`);
+          }
+        });
+        return { parsed };
+      } catch (e) {
+        return { error: e };
+      }
+    }
+    module2.exports.config = config;
+    module2.exports.parse = parse;
+  }
+});
+
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS({
   "node_modules/@actions/core/lib/utils.js"(exports2) {
@@ -287,82 +363,6 @@ var require_core = __commonJS({
       return process.env[`STATE_${name}`] || "";
     }
     exports2.getState = getState;
-  }
-});
-
-// node_modules/dotenv/lib/main.js
-var require_main = __commonJS({
-  "node_modules/dotenv/lib/main.js"(exports2, module2) {
-    var fs2 = require("fs");
-    var path2 = require("path");
-    var os3 = require("os");
-    function log(message) {
-      console.log(`[dotenv][DEBUG] ${message}`);
-    }
-    var NEWLINE = "\n";
-    var RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/;
-    var RE_NEWLINES = /\\n/g;
-    var NEWLINES_MATCH = /\r\n|\n|\r/;
-    function parse(src, options) {
-      const debug = Boolean(options && options.debug);
-      const obj = {};
-      src.toString().split(NEWLINES_MATCH).forEach(function(line, idx) {
-        const keyValueArr = line.match(RE_INI_KEY_VAL);
-        if (keyValueArr != null) {
-          const key = keyValueArr[1];
-          let val = keyValueArr[2] || "";
-          const end = val.length - 1;
-          const isDoubleQuoted = val[0] === '"' && val[end] === '"';
-          const isSingleQuoted = val[0] === "'" && val[end] === "'";
-          if (isSingleQuoted || isDoubleQuoted) {
-            val = val.substring(1, end);
-            if (isDoubleQuoted) {
-              val = val.replace(RE_NEWLINES, NEWLINE);
-            }
-          } else {
-            val = val.trim();
-          }
-          obj[key] = val;
-        } else if (debug) {
-          log(`did not match key and value when parsing line ${idx + 1}: ${line}`);
-        }
-      });
-      return obj;
-    }
-    function resolveHome(envPath) {
-      return envPath[0] === "~" ? path2.join(os3.homedir(), envPath.slice(1)) : envPath;
-    }
-    function config(options) {
-      let dotenvPath = path2.resolve(process.cwd(), ".env");
-      let encoding = "utf8";
-      let debug = false;
-      if (options) {
-        if (options.path != null) {
-          dotenvPath = resolveHome(options.path);
-        }
-        if (options.encoding != null) {
-          encoding = options.encoding;
-        }
-        if (options.debug != null) {
-          debug = true;
-        }
-      }
-      try {
-        const parsed = parse(fs2.readFileSync(dotenvPath, { encoding }), { debug });
-        Object.keys(parsed).forEach(function(key) {
-          if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
-            process.env[key] = parsed[key];
-          } else if (debug) {
-            log(`"${key}" is already defined in \`process.env\` and will not be overwritten`);
-          }
-        });
-        return { parsed };
-      } catch (e) {
-        return { error: e };
-      }
-    }
-    module2.exports.config = config;
-    module2.exports.parse = parse;
   }
 });
 
@@ -4169,22 +4169,22 @@ async function getK6(versionSpec, osArch = os.arch()) {
   let toolPath;
   toolPath = tc.find("k6", versionSpec, osArch);
   if (toolPath) {
-    core.info(`Found in cache @ ${toolPath}`);
+    core2.info(`Found in cache @ ${toolPath}`);
   } else {
-    core.info(`Attempting to download ${versionSpec}...`);
+    core2.info(`Attempting to download ${versionSpec}...`);
     let downloadPath = "";
     let info = await getInfoFromDist(versionSpec, osArch) || {};
     if (!info) {
       throw new Error(`Unable to find K6 version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`);
     }
-    core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
+    core2.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
     try {
       downloadPath = await tc.downloadTool(info.downloadUrl);
     } catch (err) {
-      core.error(err.message);
+      core2.error(err.message);
       throw err;
     }
-    core.info("Extracting ...");
+    core2.info("Extracting ...");
     let extPath;
     if (osPlat == "win32") {
       extPath = await tc.extractZip(downloadPath);
@@ -4195,20 +4195,20 @@ async function getK6(versionSpec, osArch = os.arch()) {
     } else {
       extPath = await tc.extractTar(downloadPath, void 0, ["xz", "--strip", "1"]);
     }
-    core.info("Adding to the cache ...");
+    core2.info("Adding to the cache ...");
     toolPath = await tc.cacheDir(extPath, "k6", info.resolvedVersion, info.arch);
-    core.info("Done");
+    core2.info("Done");
   }
   if (osPlat === "win32") {
     toolPath = path.join(toolPath, `k6-${versionSpec}`);
   }
   const driversPath = path.join(toolPath, "drivers");
-  core.addPath(toolPath);
-  core.addPath(driversPath);
+  core2.addPath(toolPath);
+  core2.addPath(driversPath);
 }
 async function getInfoFromDist(version, osArch = os.arch()) {
   let osPlat = os.platform();
-  core.info(`Current Operating System Platform: ${osPlat}`);
+  core2.info(`Current Operating System Platform: ${osPlat}`);
   let fileName = osPlat === "win32" ? `k6-v${version}-windows-${osArch}` : "";
   fileName = fileName || (osPlat === "linux" ? `k6-v${version}-linux-${osArch}` : "");
   fileName = fileName || `k6-commandline-${version}-macosx-${osArch}`;
@@ -4221,11 +4221,11 @@ async function getInfoFromDist(version, osArch = os.arch()) {
     fileName
   };
 }
-var os, core, tc, path, fs;
+var os, core2, tc, path, fs;
 var init_installer = __esm({
   "src/installer.js"() {
     os = require("os");
-    core = require_core();
+    core2 = require_core();
     tc = require_tool_cache();
     path = require("path");
     fs = require("fs");
@@ -4233,7 +4233,6 @@ var init_installer = __esm({
 });
 
 // src/main.js
-var core2 = require_core();
 var os2 = require("os");
 var dotenv = require_main().config();
 var installer = (init_installer(), installer_exports);
@@ -4246,7 +4245,7 @@ async function run() {
     }
     await installer.getK6(version, osArchitecture);
   } catch (error) {
-    core2.setFailed(error.message);
+    core.setFailed(error.message);
   }
 }
 run();

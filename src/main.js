@@ -1,4 +1,3 @@
-const core = require('@actions/core');
 const os = require('os');
 const dotenv = require('dotenv').config();
 const installer = require('./installer');
