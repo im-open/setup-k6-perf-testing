@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup K6
-        uses: actions/setup-k6-perf-testing@v1
+        uses: im-open/setup-k6-perf-testing@v1.0.0
         with:
           version: 0.33.0
 
