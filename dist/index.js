@@ -4592,9 +4592,6 @@ async function run() {
     if (!osArchitecture) {
       osArchitecture = 'amd64';
     }
-    if (!version) {
-      version = '0.33.0';
-    }
     await installer.getK6(version, osArchitecture);
   } catch (error) {
     core2.setFailed(error.message);
