@@ -18,8 +18,10 @@ runs:
       id: download
       shell: bash
       working-directory: '${{ github.action_path }}'
+      env:
+        VERSION: ${{ inputs.version }}
+        ARCH: ${{ inputs.architecture }}
       run: |
-        echo "Version: ${INPUT_VERSION}"
         node ./dist/index.js
     - name: Tune OS
       id: tune_os
