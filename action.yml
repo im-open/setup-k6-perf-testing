@@ -19,6 +19,7 @@ runs:
       shell: bash
       working-directory: '${{ github.action_path }}'
       run: |
+        echo "Version: ${INPUT_VERSION}"
         node ./dist/index.js
     - name: Tune OS
       id: tune_os
