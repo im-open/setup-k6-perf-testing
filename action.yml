@@ -14,15 +14,12 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: 'Move Directory'
-      shell: bash
-      run: |
-        cd ${{ github.action_path }}
     - name: 'Download K6'
       id: download
       shell: bash
       run: |
-        node dist/index.js
+        cd ${{ github.action_path }}
+        node ./dist/index.js
     - name: Tune OS
       id: tune_os
       shell: bash
