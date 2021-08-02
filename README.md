@@ -17,7 +17,7 @@ No Outputs
 ```yml
 jobs:
   stress-test:
-    runs-on: [self-hosted, ubuntu-20.04]
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout
