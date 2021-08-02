@@ -1,22 +1,38 @@
-name: 'Composite Run Steps Action Template'
+name: 'Setup K6 Performance Testing'
 
-description: 'Add description here'
+description: 'Downloads and installs k6 at the specified version and configures OS with k6 optimized settings for stress testing.'
 
 inputs:
-  input-1:
-    description: 'Add a description here'
+  version:
+    description: The version of k6 to install
     required: true
-
-outputs:
-  output-1:
-    description: 'Add description here'
-    value: '${{ steps.step_1.outputs.world }}'
+  architecture:
+    description: 'Target operating system architecture for K6 to use. Examples: arm64, amd64. Will use system architecture by default.'
+    required: false
+    default: 'amd64'
 
 runs:
   using: 'composite'
   steps:
-    - name: Step 1
-      id: step_1
+    - name: 'Download K6'
+      shell: bash
+      working-directory: '${{ github.action_path }}'
+      env:
+        VERSION: ${{ inputs.version }}
+        ARCH: ${{ inputs.architecture }}
+      run: |
+        node ./dist/index.js
+    - name: Tune OS
       shell: bash
       run: |
-        echo "::set-output name=hello::world"
+        echo "Optimizing OS for Stress Test"
+        sudo cp -fr /etc/security/limits.conf /etc/security/limits.conf.bk
+        sudo sed -i "s/65536/1048576/" /etc/security/limits.conf
+        sudo sysctl -w net.ipv4.tcp_tw_reuse=1
+        sudo sysctl -w net.ipv4.ip_local_port_range="16384 65000"
+        sudo sysctl -w fs.file-max=1048576
+        sudo sysctl -p
+
+        echo "Updated open file limit setting, reuse TCP port setting, and port range setting below:"
+        sudo sysctl -a | grep -E 'net.ipv4.ip_local_port_range|net.ipv4.tcp_tw_reuse|fs.file-max'
+
