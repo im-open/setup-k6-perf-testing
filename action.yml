@@ -19,6 +19,7 @@ runs:
       shell: bash
       run: |
         node ${{ github.action_path }}/dist/index.js
+      
     - name: Tune OS
       id: tune_os
       shell: bash
