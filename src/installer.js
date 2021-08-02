@@ -20,7 +20,7 @@ export async function getK6(versionSpec, osArch = os.arch()) {
     let info = (await getInfoFromDist(versionSpec, osArch)) || {};
 
     //
-    // Download from Flyway
+    // Download from K6.io
     //
     if (!info) {
       throw new Error(
@@ -54,7 +54,7 @@ export async function getK6(versionSpec, osArch = os.arch()) {
     }
 
     //
-    // Install into the local tool cache - flyway extracts with a root folder that matches the fileName downloaded
+    // Install into the local tool cache - k6 extracts with a root folder that matches the fileName downloaded
     //
     core.info('Adding to the cache ...');
     toolPath = await tc.cacheDir(extPath, 'k6', info.resolvedVersion, info.arch);

@@ -7,7 +7,7 @@ inputs:
     description: The version of k6 to install
     required: true
   architecture:
-    description: 'Target operating system architecture for Flyway to use. Examples: x86, x64. Will use system architecture by default.'
+    description: 'Target operating system architecture for K6 to use. Examples: x86, x64. Will use system architecture by default.'
     required: false
     default: 'amd64'
 

@@ -6,7 +6,7 @@ This action downloads and installs [K6](https://k6.io/) via the [Actions tool-ca
 | Parameter      | Is Required | Description                  |
 | -------------- | ----------- | ---------------------------- |
 | `version`      | true        | The version of k6 to install |
-| `architecture` | false       | Target operating system architecture for Flyway to use. Examples: amd64, arm64. Will use system architecture by default. |
+| `architecture` | false       | Target operating system architecture for K6 to use. Examples: amd64, arm64. Will use system architecture by default. |
 
 ## Outputs
 
