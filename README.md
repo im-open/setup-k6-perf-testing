@@ -1,6 +1,7 @@
 # composite-run-steps-action-template
 
-This action downloads and installs [K6](https://k6.io/) via the [Actions tool-cache utility](https://github.com/actions/toolkit/tree/main/packages/tool-cache).
+This action downloads and installs [K6](https://k6.io/) via the [Actions tool-cache utility](https://github.com/actions/toolkit/tree/main/packages/tool-cache).  This action requires the use of nodejs.  Please ensure
+it is installed on the action runner prior to this action.
 
 ## Inputs
 | Parameter      | Is Required | Description                  |
@@ -22,6 +23,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: Setup K6
         uses: im-open/setup-k6-perf-testing@v1.0.0
