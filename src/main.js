@@ -1,12 +1,12 @@
+require('dotenv').config();
 const core = require('@actions/core');
 const os = require('os');
-const dotenv = require('dotenv').config();
 const installer = require('./installer');
 
 async function run() {
   try {
-    let version = dotenv.process.env.VERSION;
-    let osArchitecture = dotenv.process.env.ARCH;
+    let version = process.env.VERSION;
+    let osArchitecture = process.env.ARCH;
 
     if (!osArchitecture) {
       osArchitecture = 'amd64';
