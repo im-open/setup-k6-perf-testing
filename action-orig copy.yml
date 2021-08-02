@@ -18,7 +18,7 @@ runs:
       id: download
       shell: bash
       run: |
-        node dist/index.js
+        node ${{ github.action_path }}/dist/index.js
     - name: Tune OS
       id: tune_os
       shell: bash

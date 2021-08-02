@@ -1,0 +1,17 @@
+name: 'Setup K6 Performance Testing'
+
+description: 'Downloads and installs k6 at the specified version and configures OS with k6 optimized settings for stress testing.'
+
+inputs:
+  version:
+    description: The version of k6 to install
+    required: true
+  architecture:
+    description: 'Target operating system architecture for K6 to use. Examples: x86, x64. Will use system architecture by default.'
+    required: false
+    default: 'amd64'
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+
