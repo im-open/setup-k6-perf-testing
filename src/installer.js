@@ -4,7 +4,7 @@ const tc = require('@actions/tool-cache');
 const path = require('path');
 const fs = require('fs');
 
-export async function getK6(versionSpec, osArch = os.arch()) {
+export async function getK6(versionSpec, osArch = 'amd64') {
   let osPlat = os.platform();
 
   // check cache
