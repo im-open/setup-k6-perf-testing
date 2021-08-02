@@ -15,7 +15,6 @@ runs:
   using: 'composite'
   steps:
     - name: 'Download K6'
-      id: download
       shell: bash
       working-directory: '${{ github.action_path }}'
       env:
@@ -24,7 +23,6 @@ runs:
       run: |
         node ./dist/index.js
     - name: Tune OS
-      id: tune_os
       shell: bash
       run: |
         echo "Optimizing OS for Stress Test"
