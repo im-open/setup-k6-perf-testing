@@ -12,25 +12,6 @@ inputs:
     default: 'amd64'
 
 runs:
-  using: 'composite'
-  steps:
-    - name: 'Download K6'
-      id: download
-      shell: bash
-      run: |
-        node dist/index.js
-    - name: Tune OS
-      id: tune_os
-      shell: bash
-      run: |
-        echo "Optimizing OS for Stress Test"
-        sudo cp -fr /etc/security/limits.conf /etc/security/limits.conf.bk
-        sudo sed -i "s/65536/1048576/" /etc/security/limits.conf
-        sudo sysctl -w net.ipv4.tcp_tw_reuse=1
-        sudo sysctl -w net.ipv4.ip_local_port_range="16384 65000"
-        sudo sysctl -w fs.file-max=1048576
-        sudo sysctl -p
-
-        echo "Updated open file limit setting, reuse TCP port setting, and port range setting below:"
-        sudo sysctl -a | grep -E 'net.ipv4.ip_local_port_range|net.ipv4.tcp_tw_reuse|fs.file-max'
+  using: 'node12'
+  main: 'dist/index.js'
 
