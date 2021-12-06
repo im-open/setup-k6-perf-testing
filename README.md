@@ -16,10 +16,10 @@ it is installed on the action runner prior to this action.
 - [License](#license)
 
 ## Inputs
-| Parameter      | Is Required | Description                                                                                                          |
-| -------------- | ----------- | -------------------------------------------------------------------------------------------------------------------- |
-| `version`      | true        | The version of k6 to install                                                                                         |
-| `architecture` | false       | Target operating system architecture for K6 to use. Examples: amd64, arm64. Will use system architecture by default. |
+| Parameter      | Is Required | Description                                                                                                                                    |
+| -------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `version`      | true        | The version of k6 to install.  Do not include the `v` in the prefix.  At this time only versions 0.32.0 and higher will work with this action. |
+| `architecture` | false       | Target operating system architecture for K6 to use. Examples: amd64, arm64. Will use system architecture by default.                           |
 
 ## Outputs
 
@@ -40,9 +40,9 @@ jobs:
           node-version: '14'
 
       - name: Setup K6
-        uses: im-open/setup-k6-perf-testing@v1.0.1
+        uses: im-open/setup-k6-perf-testing@v1.0.2
         with:
-          version: 0.33.0
+          version: 0.33.0 # Must be >= 0.32.0
 
       - name: K6 Stress Test
         shell: bash

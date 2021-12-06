@@ -4,7 +4,7 @@ description: 'Downloads and installs k6 at the specified version and configures 
 
 inputs:
   version:
-    description: The version of k6 to install
+    description: 'The version of k6 to install.  Do not include the `v` in the prefix.  At this time only versions 0.32.0 and higher will work with this action.'
     required: true
   architecture:
     description: 'Target operating system architecture for K6 to use. Examples: arm64, amd64. Will use system architecture by default.'
@@ -35,4 +35,3 @@ runs:
 
         echo "Updated open file limit setting, reuse TCP port setting, and port range setting below:"
         sudo sysctl -a | grep -E 'net.ipv4.ip_local_port_range|net.ipv4.tcp_tw_reuse|fs.file-max'
-
