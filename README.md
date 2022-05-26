@@ -1,4 +1,4 @@
-# Setup K6 Client
+# Setup K6 Performance Testing
 
 This action downloads and installs [K6](https://k6.io/) via the [Actions tool-cache utility](https://github.com/actions/toolkit/tree/main/packages/tool-cache).  This action requires the use of nodejs.  Please ensure
 it is installed on the action runner prior to this action.
@@ -46,7 +46,7 @@ jobs:
           node-version: '14'
 
       - name: Setup K6
-        uses: im-open/setup-k6-perf-testing@v1.0.2
+        uses: im-open/setup-k6-perf-testing@v1.0.3
         with:
           version: 0.33.0 # Must be >= 0.32.0
 
