@@ -1,8 +1,7 @@
-# composite-run-steps-action-template
+# Setup K6 Client
 
 This action downloads and installs [K6](https://k6.io/) via the [Actions tool-cache utility](https://github.com/actions/toolkit/tree/main/packages/tool-cache).  This action requires the use of nodejs.  Please ensure
 it is installed on the action runner prior to this action.
-
 
 ## Index
 
@@ -14,6 +13,13 @@ it is installed on the action runner prior to this action.
   - [Incrementing the Version](#incrementing-the-version)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
+
+---
+### Pre-requisites
+
+- Install `pre-commit`
+- Run `pre-commit install` to setup the run `yaml format` on every commit
+- This action requires that the `actions/checkout` action has run and a `fetch-depth: 0` has been set.  The action cannot examine the tags and branches of the repository unless they've been pulled down.
 
 ## Inputs
 | Parameter      | Is Required | Description                                                                                                                                    |
@@ -56,25 +62,9 @@ jobs:
 ## Contributing
 
 When creating new PRs please ensure:
-1. The action has been recompiled.  See the [Recompiling](#recompiling) section below for more details.
-2. For major or minor changes, at least one of the commit messages contains the appropriate `+semver:` keywords listed under [Incrementing the Version](#incrementing-the-version).
-3. The `README.md` example has been updated with the new version.  See [Incrementing the Version](#incrementing-the-version).
-4. The action code does not contain sensitive information.
-
-### Recompiling
-
-If changes are made to the action's code in this repository, or its dependencies, you will need to re-compile the action.
-
-```sh
-# Installs dependencies and bundles the code
-npm run build
-
-# Bundle the code (if dependencies are already installed)
-npm run bundle
-```
-
-These commands utilize [esbuild](https://esbuild.github.io/getting-started/#bundling-for-node) to bundle the action and
-its dependencies into a single file located in the `dist` folder.
+1. For major or minor changes, at least one of the commit messages contains the appropriate `+semver:` keywords listed under [Incrementing the Version](#incrementing-the-version).
+2. The `README.md` example has been updated with the new version.  See [Incrementing the Version](#incrementing-the-version).
+3. The action code does not contain sensitive information.
 
 ### Incrementing the Version
 
@@ -89,10 +79,10 @@ This action uses [git-version-lite] to examine commit messages to determine whet
 
 ## Code of Conduct
 
-This project has adopted the [im-open's Code of Conduct](https://github.com/im-open/.github/blob/master/CODE_OF_CONDUCT.md).
+This project has adopted the [im-open's Code of Conduct](https://github.com/im-open/.github/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
-Copyright &copy; 2021, Extend Health, LLC. Code released under the [MIT license](LICENSE).
+Copyright &copy; 2022, Extend Health, LLC. Code released under the [MIT license](LICENSE).
 
 [git-version-lite]: https://github.com/im-open/git-version-lite
