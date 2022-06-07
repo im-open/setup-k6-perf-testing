@@ -8,8 +8,9 @@ async function run() {
     let version = process.env.VERSION;
     let osArchitecture = process.env.ARCH;
     let extensionDownloadUrl = process.env.EXTENSION_DOWNLOAD_URL;
+    let token = process.env.EXTENSION_DOWNLOAD_TOKEN;
 
-    await installer.getK6(version, osArchitecture, extensionDownloadUrl);
+    await installer.getK6(version, osArchitecture, extensionDownloadUrl, token);
   } catch (error) {
     core.setFailed(error.message);
   }

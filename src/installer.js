@@ -4,7 +4,7 @@ const tc = require('@actions/tool-cache');
 const path = require('path');
 const fs = require('fs');
 
-export async function getK6(versionSpec, osArch = 'amd64', extensionDownloadUrl = 'none') {
+export async function getK6(versionSpec, osArch = 'amd64', extensionDownloadUrl = 'none', token) {
   let osPlat = os.platform();
 
   // check cache
@@ -28,12 +28,13 @@ export async function getK6(versionSpec, osArch = 'amd64', extensionDownloadUrl 
       );
     }
 
-    core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
     try {
       if (extensionDownloadUrl === 'none') {
+        core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
         downloadPath = await tc.downloadTool(info.downloadUrl);
       } else {
-        downloadPath = await tc.downloadTool(extensionDownloadUrl);
+        core.info(`Acquiring custom K6 Binary - from ${extensionDownloadUrl}`);
+        downloadPath = await tc.downloadTool(extensionDownloadUrl,undefined,`token ${token}`);
       }
     } catch (err) {
       core.error(err.message);

@@ -14,6 +14,9 @@ inputs:
     description: 'Url for custom k6 binary to download.'
     default: 'none'
     required: false
+  extension-download-token:
+    description: 'Github token required to download the custom k6 binary. Required for extension-download-url.'
+    required: false
 
 runs:
   using: 'composite'
@@ -25,6 +28,8 @@ runs:
         VERSION: ${{ inputs.version }}
         ARCH: ${{ inputs.architecture }}
         EXTENSION_DOWNLOAD_URL: ${{ inputs.extension-download-url }}
+        EXTENSION_DOWNLOAD_TOKEN: ${{ inputs.extension-download-token }}
+
       run: |
         node ./dist/index.js
     - name: Tune OS
