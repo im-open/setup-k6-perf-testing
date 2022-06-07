@@ -92,3 +92,59 @@ async function getInfoFromDist(version, osArch = os.arch()) {
     fileName: fileName
   };
 }
+
+export async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPath) {
+  let osPlat = os.platform();
+
+  // If not found in cache, download
+  if (extensionZipPath) {
+    let info = (await getInfoFromDist(versionSpec, osArch)) || {};
+
+    //
+    // Download from K6.io
+    //
+    if (!info) {
+      throw new Error(
+        `Unable to find K6 version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`
+      );
+    }
+
+    //
+    // Extract
+    //
+    core.info('Extracting ...');
+    let extPath;
+
+    if (osPlat == 'win32') {
+      extPath = await tc.extractTar(extensionZip, undefined, ['xz', '--strip', '1']);
+      // Extracts to folder matching file name
+      // let nestedPath = path.join(extPath, path.basename(info.fileName, '.zip'));
+      // if (fs.existsSync(nestedPath)) {
+      //   extPath = nestedPath;
+      // }
+    } else {
+      extPath = await tc.extractTar(extensionZip, undefined, ['xz', '--strip', '1']);
+    }
+
+    //
+    // Install into the local tool cache - k6 extracts with a root folder that matches the fileName downloaded
+    //
+    core.info('Adding to the cache ...');
+    toolPath = await tc.cacheDir(extPath, 'k6', info.resolvedVersion, info.arch);
+    core.info('Done');
+  }
+
+  //
+  // The contents of the windows zip files are wrapped in a folder, unlike the tar.gz files
+  //
+  if (osPlat === 'win32') {
+    toolPath = path.join(toolPath, `k6-${versionSpec}`);
+  }
+
+  //
+  // Add the appropriate paths to the PATH env var
+  //
+  const driversPath = path.join(toolPath, 'drivers');
+  core.addPath(toolPath);
+  core.addPath(driversPath);
+}

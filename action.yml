@@ -10,17 +10,39 @@ inputs:
     description: 'Target operating system architecture for K6 to use. Examples: arm64, amd64. Will use system architecture by default.'
     required: false
     default: 'amd64'
+  extension-token:
+    description: ''
+    required: false
+  extension-asset-name:
+    description: ''
+    required: false
+    default: 'none'
+  extension-tag-name:
+    description: ''
+    required: false
+  extension-repository:
+    description: ''
+    required: false
 
 runs:
   using: 'composite'
   steps:
+    - name: Download K6 with extensions
+      if: inputs.extension-asset-name != 'none'
+      uses: im-open/download-release-asset@v1.1.0
+      with:
+        github-token: ${{ inputs.extension-token }}
+        asset-name: ${{ inputs.extension-asset-name }}
+        tag-name: ${{ inputs.extension-tag-name }}
+        repository: ${{ inputs.extension-repository }}
+  
     - name: 'Download K6'
-      if: inputs.extension-download-url == 'none'
       shell: bash
       working-directory: '${{ github.action_path }}'
       env:
         VERSION: ${{ inputs.version }}
         ARCH: ${{ inputs.architecture }}
+        EXT_ZIP_PATH: ${{ inputs.extension-asset-name }}
       run: |
         node ./dist/index.js
 

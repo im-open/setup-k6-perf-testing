@@ -27,6 +27,10 @@ it is installed on the action runner prior to this action.
 | ------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `version`                 | true        | The version of k6 to install.  Do not include the `v` in the prefix.  At this time only versions 0.32.0 and higher will work with this action. |
 | `architecture`            | false       | Target operating system architecture for K6 to use. Examples: amd64, arm64. Will use system architecture by default.                           |
+| `extension-token`         | false       | Github PAT token that has access to releases of k6 extension repository.                                                                       |
+| `extension-asset-name`    | false       | K6 extension archive File name to download in the release                                                                   |
+| `extension-tag-name`      | false       | Release tag to download k6 extension archive.                                          |
+| `extension-repository`    | false       | Repository that contains the k6 extension archive.                                          |
 
 ## Outputs
 
@@ -50,6 +54,38 @@ jobs:
         uses: im-open/setup-k6-perf-testing@latest
         with:
           version: 0.38.3 # Must be >= 0.32.0
+
+      - name: K6 Stress Test
+        shell: bash
+        run: |
+          # Set open file limit to maximum. Has to be set in this step to take affect.
+          ulimit -n 1048576
+          # Run your test.
+          k6 run check-health-simple.js
+```
+
+***Using custom k6 binary with extensions***
+
+```yml
+jobs:
+  stress-test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Setup K6
+        uses: im-open/setup-k6-perf-testing@latest
+        with:
+          version: 0.38.3 # Must be >= 0.32.0
+          extension-token: ${{ secrets.your-token }}
+          extension-asset-name: 'k6_'
+          extension-tag-name: 'k6-v0.1.0'
+          extension-repository: '<org/username>/k6-extension-repo'
 
       - name: K6 Stress Test
         shell: bash
