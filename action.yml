@@ -36,11 +36,11 @@ runs:
         tag-name: ${{ inputs.extension-tag-name }}
         repository: ${{ inputs.extension-repository }}
   
-    - name: Output Archive File
+    - name: Output Download Directory
       id: download-dir
       shell: bash
       run: |
-        $download_dir=$(pwd)
+        download_dir=$(pwd)
         echo "::set-output name=DOWNLOAD_DIR::$download_dir"
         echo "Listing Current Directory"
         ls -la .
