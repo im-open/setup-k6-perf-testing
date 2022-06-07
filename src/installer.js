@@ -96,7 +96,6 @@ async function getInfoFromDist(version, osArch = os.arch()) {
 export async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPath) {
   let osPlat = os.platform();
 
-  // If not found in cache, download
   if (extensionZipPath) {
     let info = (await getInfoFromDist(versionSpec, osArch)) || {};
 
@@ -116,14 +115,14 @@ export async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPa
     let extPath;
 
     if (osPlat == 'win32') {
-      extPath = await tc.extractTar(extensionZip, undefined, ['xz', '--strip', '1']);
+      extPath = await tc.extractTar(extensionZipPath, undefined, ['xz', '--strip', '1']);
       // Extracts to folder matching file name
       // let nestedPath = path.join(extPath, path.basename(info.fileName, '.zip'));
       // if (fs.existsSync(nestedPath)) {
       //   extPath = nestedPath;
       // }
     } else {
-      extPath = await tc.extractTar(extensionZip, undefined, ['xz', '--strip', '1']);
+      extPath = await tc.extractTar(extensionZipPath, undefined, ['xz', '--strip', '1']);
     }
 
     //

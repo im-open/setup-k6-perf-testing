@@ -4662,9 +4662,9 @@ async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPath) {
     core.info('Extracting ...');
     let extPath;
     if (osPlat == 'win32') {
-      extPath = await tc.extractTar(extensionZip, void 0, ['xz', '--strip', '1']);
+      extPath = await tc.extractTar(extensionZipPath, void 0, ['xz', '--strip', '1']);
     } else {
-      extPath = await tc.extractTar(extensionZip, void 0, ['xz', '--strip', '1']);
+      extPath = await tc.extractTar(extensionZipPath, void 0, ['xz', '--strip', '1']);
     }
     core.info('Adding to the cache ...');
     toolPath = await tc.cacheDir(extPath, 'k6', info.resolvedVersion, info.arch);
