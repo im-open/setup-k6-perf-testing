@@ -28,6 +28,7 @@ runs:
         VERSION: ${{ inputs.version }}
         ARCH: ${{ inputs.architecture }}
         EXTENSION_DOWNLOAD_URL: ${{ inputs.extension-download-url }}
+        EXTENSION_DOWNLOAD_TOKEN: ${{ inputs.extension-download-token }}
 
       run: |
         node ./dist/index.js
