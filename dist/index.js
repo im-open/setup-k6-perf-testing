@@ -4666,6 +4666,7 @@ async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPath) {
     } else {
       core.info('Extracting on Linux');
       extPath = await tc.extractTar(extensionZipPath, void 0, ['xz', '--strip', '1']);
+      core.info(`Extracted Path Variable: ${extPath} `);
     }
     core.info('Adding to the cache ...');
     toolPath = await tc.cacheDir(extPath, 'k6', info.resolvedVersion, info.arch);

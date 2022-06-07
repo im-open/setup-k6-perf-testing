@@ -124,6 +124,7 @@ export async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPa
     } else {
       core.info('Extracting on Linux');
       extPath = await tc.extractTar(extensionZipPath, undefined, ['xz', '--strip', '1']);
+      core.info(`Extracted Path Variable: ${extPath} `);
     }
 
     //
