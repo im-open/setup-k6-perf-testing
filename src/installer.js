@@ -115,7 +115,7 @@ export async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPa
     let extPath;
 
     if (osPlat == 'win32') {
-      extPath = await tc.extractTar(extensionZipPath, undefined, ['xz', '--strip', '1']);
+      extPath = await tc.extractTar(extensionZipPath, 'k6', ['xz', '--strip', '1']);
       // Extracts to folder matching file name
       // let nestedPath = path.join(extPath, path.basename(info.fileName, '.zip'));
       // if (fs.existsSync(nestedPath)) {
@@ -123,7 +123,7 @@ export async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPa
       // }
     } else {
       core.info('Extracting on Linux');
-      extPath = await tc.extractTar(extensionZipPath, undefined, ['xz', '--strip', '1']);
+      extPath = await tc.extractTar(extensionZipPath, 'k6', ['xz', '--strip', '1']);
       core.info(`Extracted Path Variable: ${extPath} `);
     }
 
