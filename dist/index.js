@@ -4590,7 +4590,7 @@ var installer_exports = {};
 __export(installer_exports, {
   getK6: () => getK6
 });
-async function getK6(versionSpec, osArch = 'amd64', extensionDownloadUrl = 'none', token) {
+async function getK6(versionSpec, osArch = 'amd64') {
   let osPlat = os.platform();
   let toolPath;
   toolPath = tc.find('k6', versionSpec, osArch);
@@ -4606,15 +4606,8 @@ async function getK6(versionSpec, osArch = 'amd64', extensionDownloadUrl = 'none
       );
     }
     try {
-      if (extensionDownloadUrl === 'none') {
-        core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
-        downloadPath = await tc.downloadTool(info.downloadUrl);
-      } else {
-        core.info(`Acquiring custom K6 Binary - from ${extensionDownloadUrl}`);
-        downloadPath = await tc.downloadTool(extensionDownloadUrl, void 0, `token ${token}`, {
-          accept: 'application/octet-stream'
-        });
-      }
+      core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
+      downloadPath = await tc.downloadTool(info.downloadUrl);
     } catch (err) {
       core.error(err.message);
       throw err;
@@ -4676,9 +4669,7 @@ async function run() {
   try {
     let version = process.env.VERSION;
     let osArchitecture = process.env.ARCH;
-    let extensionDownloadUrl = process.env.EXTENSION_DOWNLOAD_URL;
-    let token = process.env.EXTENSION_DOWNLOAD_TOKEN;
-    await installer.getK6(version, osArchitecture, extensionDownloadUrl, token);
+    await installer.getK6(version, osArchitecture);
   } catch (error) {
     core2.setFailed(error.message);
   }
