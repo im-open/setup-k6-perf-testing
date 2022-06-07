@@ -30,9 +30,9 @@ export async function getK6(versionSpec, osArch = 'amd64', extensionDownloadUrl 
 
     core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
     try {
-      if(extensionDownloadUrl == "none"){
+      if (extensionDownloadUrl === 'none') {
         downloadPath = await tc.downloadTool(info.downloadUrl);
-      }else{
+      } else {
         downloadPath = await tc.downloadTool(extensionDownloadUrl);
       }
     } catch (err) {
