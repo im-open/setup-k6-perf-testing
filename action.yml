@@ -38,7 +38,7 @@ runs:
   
     - name: 'Download K6'
       shell: bash
-      working-directory: '${{ github.action_path }}'
+      # working-directory: '${{ github.action_path }}'
       env:
         VERSION: ${{ inputs.version }}
         ARCH: ${{ inputs.architecture }}
