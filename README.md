@@ -22,10 +22,11 @@ it is installed on the action runner prior to this action.
 - This action requires that the `actions/checkout` action has run and a `fetch-depth: 0` has been set.  The action cannot examine the tags and branches of the repository unless they've been pulled down.
 
 ## Inputs
-| Parameter      | Is Required | Description                                                                                                                                    |
-| -------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `version`      | true        | The version of k6 to install.  Do not include the `v` in the prefix.  At this time only versions 0.32.0 and higher will work with this action. |
-| `architecture` | false       | Target operating system architecture for K6 to use. Examples: amd64, arm64. Will use system architecture by default.                           |
+| Parameter                | Is Required | Description                                                                                                                                    |
+| ------------------------ | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `version`                | true        | The version of k6 to install.  Do not include the `v` in the prefix.  At this time only versions 0.32.0 and higher will work with this action. |
+| `architecture`           | false       | Target operating system architecture for K6 to use. Examples: amd64, arm64. Will use system architecture by default.                           |
+| `extension-download-url` | false       | Url for custom k6 binary to download. Default is `none`.  This is only used if you are running k6 extensions.                                  |
 
 ## Outputs
 
@@ -46,9 +47,9 @@ jobs:
           node-version: '14'
 
       - name: Setup K6
-        uses: im-open/setup-k6-perf-testing@v1.0.3
+        uses: im-open/setup-k6-perf-testing@latest
         with:
-          version: 0.33.0 # Must be >= 0.32.0
+          version: 0.38.3 # Must be >= 0.32.0
 
       - name: K6 Stress Test
         shell: bash

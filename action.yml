@@ -10,6 +10,10 @@ inputs:
     description: 'Target operating system architecture for K6 to use. Examples: arm64, amd64. Will use system architecture by default.'
     required: false
     default: 'amd64'
+  extension-download-url:
+    description: 'Url for custom k6 binary to download.'
+    default: 'none'
+    required: false
 
 runs:
   using: 'composite'
@@ -20,6 +24,7 @@ runs:
       env:
         VERSION: ${{ inputs.version }}
         ARCH: ${{ inputs.architecture }}
+        EXTENSION_DOWNLOAD_URL: ${{ inputs.extension-download-url }}
       run: |
         node ./dist/index.js
     - name: Tune OS
