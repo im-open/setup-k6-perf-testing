@@ -111,7 +111,7 @@ export async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPa
     //
     // Extract
     //
-    core.info('Extracting ...');
+    core.info(`Extracting ... ${extensionZipPath}`);
     let extPath;
 
     if (osPlat == 'win32') {
@@ -122,6 +122,7 @@ export async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPa
       //   extPath = nestedPath;
       // }
     } else {
+      core.info('Extracting on Linux');
       extPath = await tc.extractTar(extensionZipPath, undefined, ['xz', '--strip', '1']);
     }
 

@@ -4659,11 +4659,12 @@ async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPath) {
         `Unable to find K6 version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`
       );
     }
-    core.info('Extracting ...');
+    core.info(`Extracting ... ${extensionZipPath}`);
     let extPath;
     if (osPlat == 'win32') {
       extPath = await tc.extractTar(extensionZipPath, void 0, ['xz', '--strip', '1']);
     } else {
+      core.info('Extracting on Linux');
       extPath = await tc.extractTar(extensionZipPath, void 0, ['xz', '--strip', '1']);
     }
     core.info('Adding to the cache ...');
