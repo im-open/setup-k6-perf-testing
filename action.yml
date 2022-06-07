@@ -11,17 +11,17 @@ inputs:
     required: false
     default: 'amd64'
   extension-token:
-    description: ''
+    description: 'Github PAT token that has access to releases of k6 extension repository'
     required: false
   extension-asset-name:
-    description: ''
+    description: 'k6 extension archive File name to download in the Release'
     required: false
     default: 'none'
   extension-tag-name:
-    description: ''
+    description: 'Release tag to download k6 extension archive'
     required: false
   extension-repository:
-    description: ''
+    description: 'Repository that contains the k6 extension archive.'
     required: false
 
 runs:
