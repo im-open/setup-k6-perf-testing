@@ -34,7 +34,9 @@ export async function getK6(versionSpec, osArch = 'amd64', extensionDownloadUrl 
         downloadPath = await tc.downloadTool(info.downloadUrl);
       } else {
         core.info(`Acquiring custom K6 Binary - from ${extensionDownloadUrl}`);
-        downloadPath = await tc.downloadTool(extensionDownloadUrl, undefined, `token ${token}`);
+        downloadPath = await tc.downloadTool(extensionDownloadUrl, undefined, `token ${token}`, {
+          accept: 'application/octet-stream'
+        });
       }
     } catch (err) {
       core.error(err.message);

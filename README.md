@@ -59,7 +59,7 @@ jobs:
         with:
           version: 0.38.3 # Must be >= 0.32.0
           extension-url: 'https://github.com/<your-org>/<your-repo>/releases/download/<release-name>/<tar.gz file to download>'
-          extension-download-token: ${{ secrets.your-token }}
+          extension-download-token: ${{ secrets.your_token }}
 
       - name: K6 Stress Test
         shell: bash
