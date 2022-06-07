@@ -38,11 +38,11 @@ runs:
   
     - name: 'Download K6'
       shell: bash
-      # working-directory: '${{ github.action_path }}'
+      working-directory: '${{ github.action_path }}'
       env:
         VERSION: ${{ inputs.version }}
         ARCH: ${{ inputs.architecture }}
-        EXT_ZIP_PATH: ${{ inputs.extension-asset-name }}
+        EXT_ZIP_PATH: "${{ github.workpace }}/${{ inputs.extension-asset-name }}"
       run: |
         node ./dist/index.js
 
