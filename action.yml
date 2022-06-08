@@ -26,40 +26,53 @@ inputs:
 
 runs:
   using: 'composite'
-  steps:
-    - name: Download K6 with extensions
-      if: inputs.extension-asset-name != 'none'
-      uses: im-open/download-release-asset@v1.1.0
-      with:
-        github-token: ${{ inputs.extension-token }}
-        asset-name: ${{ inputs.extension-asset-name }}
-        tag-name: ${{ inputs.extension-tag-name }}
-        repository: ${{ inputs.extension-repository }}
-  
-    - name: Output Download Directory
-      id: download-dir
-      shell: bash
-      run: |
-        # Output Download Directory
-        download_dir=$(pwd)
-        echo "::set-output name=DOWNLOAD_DIR::$download_dir"
-        echo "Listing Current Directory"
-        ls -la .
-    
+  steps: 
     - name: 'Download K6 and Install'
+      if: inputs.extension-asset-name == 'none'
       shell: bash
       working-directory: '${{ github.action_path }}'
       env:
         VERSION: ${{ inputs.version }}
         ARCH: ${{ inputs.architecture }}
-        EXT_ZIP_PATH: "${{ steps.download-dir.outputs.DOWNLOAD_DIR }}/${{ inputs.extension-asset-name }}"
       run: |
         # Download K6 and Install
         node ./dist/index.js
 
+    - name: Download K6 with extensions
+      id: download
+      if: inputs.extension-asset-name != 'none'
+      uses: im-open/download-release-asset@v1.1.1
+      with:
+        github-token: ${{ inputs.extension-token }}
+        asset-name: ${{ inputs.extension-asset-name }}
+        tag-name: ${{ inputs.extension-tag-name }}
+        repository: ${{ inputs.extension-repository }}
+
+    - name: Install K6 Extension in Tools Cache
+      if: inputs.extension-asset-name != 'none'
+      id: download-dir
+      shell: bash
+      run: |
+        # Install K6 Extension in Tools Cache
+        download_asset="${{ steps.download.outputs.download-file-path }}"
+
+        tools_cache_k6_dir="${{ runner.tool_cache }}/k6/${{ inputs.extension-tag-name }}"
+
+        echo "Extracting K6 Extension"
+        mkdir -p $tools_cache_k6_dir
+        tar -xvzf $download_asset -C $tools_cache_k6_dir
+        echo "$tools_cache_k6_dir" >> $GITHUB_PATH
+       
+        echo "Listing K6 Tools Cache Directory"
+        ls -la $tools_cache_k6_dir
+        
+        echo "Validating K6 is in path"
+        k6 version
+    
     - name: Tune OS
       shell: bash
       run: |
+        # Tune OS
         echo "Optimizing OS for Stress Test"
         sudo cp -fr /etc/security/limits.conf /etc/security/limits.conf.bk
         sudo sed -i "s/65536/1048576/" /etc/security/limits.conf

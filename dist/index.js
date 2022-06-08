@@ -3284,12 +3284,12 @@ var require_toolrunner = __commonJS({
     var timers_1 = require('timers');
     var IS_WINDOWS = process.platform === 'win32';
     var ToolRunner = class extends events.EventEmitter {
-      constructor(toolPath2, args, options) {
+      constructor(toolPath, args, options) {
         super();
-        if (!toolPath2) {
+        if (!toolPath) {
           throw new Error("Parameter 'toolPath' cannot be null or empty.");
         }
-        this.toolPath = toolPath2;
+        this.toolPath = toolPath;
         this.args = args || [];
         this.options = options || {};
       }
@@ -3299,28 +3299,28 @@ var require_toolrunner = __commonJS({
         }
       }
       _getCommandString(options, noPrefix) {
-        const toolPath2 = this._getSpawnFileName();
+        const toolPath = this._getSpawnFileName();
         const args = this._getSpawnArgs(options);
         let cmd = noPrefix ? '' : '[command]';
         if (IS_WINDOWS) {
           if (this._isCmdFile()) {
-            cmd += toolPath2;
+            cmd += toolPath;
             for (const a of args) {
               cmd += ` ${a}`;
             }
           } else if (options.windowsVerbatimArguments) {
-            cmd += `"${toolPath2}"`;
+            cmd += `"${toolPath}"`;
             for (const a of args) {
               cmd += ` ${a}`;
             }
           } else {
-            cmd += this._windowsQuoteCmdArg(toolPath2);
+            cmd += this._windowsQuoteCmdArg(toolPath);
             for (const a of args) {
               cmd += ` ${this._windowsQuoteCmdArg(a)}`;
             }
           }
         } else {
-          cmd += toolPath2;
+          cmd += toolPath;
           for (const a of args) {
             cmd += ` ${a}`;
           }
@@ -3470,14 +3470,14 @@ var require_toolrunner = __commonJS({
         result.errStream = options.errStream || process.stderr;
         return result;
       }
-      _getSpawnOptions(options, toolPath2) {
+      _getSpawnOptions(options, toolPath) {
         options = options || {};
         const result = {};
         result.cwd = options.cwd;
         result.env = options.env;
         result['windowsVerbatimArguments'] = options.windowsVerbatimArguments || this._isCmdFile();
         if (options.windowsVerbatimArguments) {
-          result.argv0 = `"${toolPath2}"`;
+          result.argv0 = `"${toolPath}"`;
         }
         return result;
       }
@@ -3649,7 +3649,7 @@ var require_toolrunner = __commonJS({
     }
     exports2.argStringToArray = argStringToArray;
     var ExecState = class extends events.EventEmitter {
-      constructor(options, toolPath2) {
+      constructor(options, toolPath) {
         super();
         this.processClosed = false;
         this.processError = '';
@@ -3659,11 +3659,11 @@ var require_toolrunner = __commonJS({
         this.delay = 1e4;
         this.done = false;
         this.timeout = null;
-        if (!toolPath2) {
+        if (!toolPath) {
           throw new Error('toolPath must not be empty');
         }
         this.options = options;
-        this.toolPath = toolPath2;
+        this.toolPath = toolPath;
         if (options.delay) {
           this.delay = options.delay;
         }
@@ -3806,9 +3806,9 @@ var require_exec = __commonJS({
         if (commandArgs.length === 0) {
           throw new Error(`Parameter 'commandLine' cannot be null or empty.`);
         }
-        const toolPath2 = commandArgs[0];
+        const toolPath = commandArgs[0];
         args = commandArgs.slice(1).concat(args || []);
-        const runner = new tr.ToolRunner(toolPath2, args, options);
+        const runner = new tr.ToolRunner(toolPath, args, options);
         return runner.exec();
       });
     }
@@ -4421,30 +4421,30 @@ var require_tool_cache = __commonJS({
         const match = evaluateVersions(localVersions, versionSpec);
         versionSpec = match;
       }
-      let toolPath2 = '';
+      let toolPath = '';
       if (versionSpec) {
         versionSpec = semver.clean(versionSpec) || '';
         const cachePath = path2.join(_getCacheDirectory(), toolName, versionSpec, arch);
         core3.debug(`checking cache: ${cachePath}`);
         if (fs2.existsSync(cachePath) && fs2.existsSync(`${cachePath}.complete`)) {
           core3.debug(`Found tool in cache ${toolName} ${versionSpec} ${arch}`);
-          toolPath2 = cachePath;
+          toolPath = cachePath;
         } else {
           core3.debug('not found');
         }
       }
-      return toolPath2;
+      return toolPath;
     }
     exports2.find = find;
     function findAllVersions(toolName, arch) {
       const versions = [];
       arch = arch || os3.arch();
-      const toolPath2 = path2.join(_getCacheDirectory(), toolName);
-      if (fs2.existsSync(toolPath2)) {
-        const children = fs2.readdirSync(toolPath2);
+      const toolPath = path2.join(_getCacheDirectory(), toolName);
+      if (fs2.existsSync(toolPath)) {
+        const children = fs2.readdirSync(toolPath);
         for (const child of children) {
           if (isExplicitVersion(child)) {
-            const fullPath = path2.join(toolPath2, child, arch || '');
+            const fullPath = path2.join(toolPath, child, arch || '');
             if (fs2.existsSync(fullPath) && fs2.existsSync(`${fullPath}.complete`)) {
               versions.push(child);
             }
@@ -4588,15 +4588,14 @@ var require_tool_cache = __commonJS({
 // src/installer.js
 var installer_exports = {};
 __export(installer_exports, {
-  getK6: () => getK6,
-  installK6Zip: () => installK6Zip
+  getK6: () => getK6
 });
 async function getK6(versionSpec, osArch = 'amd64') {
   let osPlat = os.platform();
-  let toolPath2;
-  toolPath2 = tc.find('k6', versionSpec, osArch);
-  if (toolPath2) {
-    core.info(`Found in cache @ ${toolPath2}`);
+  let toolPath;
+  toolPath = tc.find('k6', versionSpec, osArch);
+  if (toolPath) {
+    core.info(`Found in cache @ ${toolPath}`);
   } else {
     core.info(`Attempting to download ${versionSpec}...`);
     let downloadPath = '';
@@ -4625,14 +4624,14 @@ async function getK6(versionSpec, osArch = 'amd64') {
       extPath = await tc.extractTar(downloadPath, void 0, ['xz', '--strip', '1']);
     }
     core.info('Adding to the cache ...');
-    toolPath2 = await tc.cacheDir(extPath, 'k6', info.resolvedVersion, info.arch);
+    toolPath = await tc.cacheDir(extPath, 'k6', info.resolvedVersion, info.arch);
     core.info('Done');
   }
   if (osPlat === 'win32') {
-    toolPath2 = path.join(toolPath2, `k6-${versionSpec}`);
+    toolPath = path.join(toolPath, `k6-${versionSpec}`);
   }
-  const driversPath = path.join(toolPath2, 'drivers');
-  core.addPath(toolPath2);
+  const driversPath = path.join(toolPath, 'drivers');
+  core.addPath(toolPath);
   core.addPath(driversPath);
 }
 async function getInfoFromDist(version, osArch = os.arch()) {
@@ -4649,35 +4648,6 @@ async function getInfoFromDist(version, osArch = os.arch()) {
     arch: osArch,
     fileName
   };
-}
-async function installK6Zip(versionSpec, osArch = 'amd64', extensionZipPath) {
-  let osPlat = os.platform();
-  if (extensionZipPath) {
-    let info = (await getInfoFromDist(versionSpec, osArch)) || {};
-    if (!info) {
-      throw new Error(
-        `Unable to find K6 version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`
-      );
-    }
-    core.info(`Extracting ... ${extensionZipPath}`);
-    let extPath;
-    if (osPlat == 'win32') {
-      extPath = await tc.extractTar(extensionZipPath, 'k6', ['xz', '--strip', '1']);
-    } else {
-      core.info('Extracting on Linux');
-      extPath = await tc.extractTar(extensionZipPath, 'k6', ['xz', '--strip', '1']);
-      core.info(`Extracted Path Variable: ${extPath} `);
-    }
-    core.info('Adding to the cache ...');
-    toolPath = await tc.cacheDir(extPath, 'k6', info.resolvedVersion, info.arch);
-    core.info('Done');
-  }
-  if (osPlat === 'win32') {
-    toolPath = path.join(toolPath, `k6-${versionSpec}`);
-  }
-  const driversPath = path.join(toolPath, 'drivers');
-  core.addPath(toolPath);
-  core.addPath(driversPath);
 }
 var os, core, tc, path, fs;
 var init_installer = __esm({
@@ -4697,14 +4667,9 @@ var os2 = require('os');
 var installer = (init_installer(), installer_exports);
 async function run() {
   try {
-    let extensionZipPath = process.env.EXT_ZIP_PATH;
     let version = process.env.VERSION;
     let osArchitecture = process.env.ARCH;
-    if (extensionZipPath === 'none') {
-      await installer.installK6Zip(version, osArchitecture, extensionZipPath);
-    } else {
-      await installer.getK6(version, osArchitecture);
-    }
+    await installer.getK6(version, osArchitecture);
   } catch (error) {
     core2.setFailed(error.message);
   }
