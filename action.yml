@@ -64,6 +64,7 @@ runs:
         echo "$tools_cache_k6_dir" >> $GITHUB_PATH
         export PATH="$PATH:$tools_cache_k6_dir"
 
+        # BEGIN: Comment out for troubleshooting
         echo "Validating Path is updated."
         echo "GITHUB_PATH:"
         echo $GITHUB_PATH
@@ -73,6 +74,7 @@ runs:
 
         echo "Listing K6 Tools Cache Directory"
         ls -la $tools_cache_k6_dir
+        # END: Comment out for troubleshooting
         
         echo "Validating K6 is in path"
         k6 version
