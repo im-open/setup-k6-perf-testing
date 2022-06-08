@@ -4700,7 +4700,7 @@ async function run() {
     let extensionZipPath = process.env.EXT_ZIP_PATH;
     let version = process.env.VERSION;
     let osArchitecture = process.env.ARCH;
-    if (extensionZipPath != 'none') {
+    if (extensionZipPath === 'none') {
       await installer.installK6Zip(version, osArchitecture, extensionZipPath);
     } else {
       await installer.getK6(version, osArchitecture);

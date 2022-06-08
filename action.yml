@@ -40,12 +40,13 @@ runs:
       id: download-dir
       shell: bash
       run: |
+        # Output Download Directory
         download_dir=$(pwd)
         echo "::set-output name=DOWNLOAD_DIR::$download_dir"
         echo "Listing Current Directory"
         ls -la .
     
-    - name: 'Download K6'
+    - name: 'Download K6 and Install'
       shell: bash
       working-directory: '${{ github.action_path }}'
       env:
@@ -53,6 +54,7 @@ runs:
         ARCH: ${{ inputs.architecture }}
         EXT_ZIP_PATH: "${{ steps.download-dir.outputs.DOWNLOAD_DIR }}/${{ inputs.extension-asset-name }}"
       run: |
+        # Download K6 and Install
         node ./dist/index.js
 
     - name: Tune OS
