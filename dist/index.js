@@ -4605,8 +4605,8 @@ async function getK6(versionSpec, osArch = 'amd64') {
         `Unable to find K6 version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`
       );
     }
-    core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
     try {
+      core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
       downloadPath = await tc.downloadTool(info.downloadUrl);
     } catch (err) {
       core.error(err.message);

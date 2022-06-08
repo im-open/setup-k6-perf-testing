@@ -28,8 +28,8 @@ export async function getK6(versionSpec, osArch = 'amd64') {
       );
     }
 
-    core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
     try {
+      core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
       downloadPath = await tc.downloadTool(info.downloadUrl);
     } catch (err) {
       core.error(err.message);
