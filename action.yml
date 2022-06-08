@@ -58,11 +58,19 @@ runs:
 
         tools_cache_k6_dir="${{ runner.tool_cache }}/k6/${{ inputs.extension-tag-name }}"
 
-        echo "Extracting K6 Extension"
+        echo "Extracting K6 Extension ($download_asset) to $tools_cache_k6_dir"
         mkdir -p $tools_cache_k6_dir
         tar -xvzf $download_asset -C $tools_cache_k6_dir
         echo "$tools_cache_k6_dir" >> $GITHUB_PATH
-       
+        export PATH="$PATH:$tools_cache_k6_dir"
+
+        echo "Validating Path is updated."
+        echo "GITHUB_PATH:"
+        echo $GITHUB_PATH
+        echo ""
+        echo "PATH Variable"
+        echo $PATH
+
         echo "Listing K6 Tools Cache Directory"
         ls -la $tools_cache_k6_dir
         
