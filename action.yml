@@ -41,7 +41,7 @@ runs:
     - name: Download K6 with extensions
       id: download
       if: inputs.extension-asset-name != 'none'
-      uses: im-open/download-release-asset@v1.1.2
+      uses: im-open/download-release-asset@v1.2.0
       with:
         github-token: ${{ inputs.extension-token }}
         asset-name: ${{ inputs.extension-asset-name }}
