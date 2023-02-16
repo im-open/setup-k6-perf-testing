@@ -1,6 +1,6 @@
-name: 'Setup K6 Performance Testing'
+name: Setup K6 Performance Testing
 
-description: 'Downloads and installs k6 at the specified version and configures OS with k6 optimized settings for stress testing.'
+description: Downloads and installs k6 at the specified version and configures OS with k6 optimized settings for stress testing.
 
 inputs:
   version:
@@ -25,7 +25,7 @@ inputs:
     required: false
 
 runs:
-  using: 'composite'
+  using: composite
   steps: 
     - name: 'Download K6 and Install'
       if: inputs.extension-asset-name == 'none'
