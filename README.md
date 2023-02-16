@@ -51,7 +51,7 @@ jobs:
           node-version: '16'
 
       - name: Setup K6
-        uses: im-open/setup-k6-perf-testing@latest
+        uses: im-open/setup-k6-perf-testing@v1
         with:
           version: 0.38.3 # Must be >= 0.32.0
 
