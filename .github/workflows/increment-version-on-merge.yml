@@ -72,3 +72,4 @@ jobs:
           sha: ${{ steps.version.outputs.NEXT_VERSION_SHA }}
           source-tag: ${{ steps.version.outputs.NEXT_VERSION }}
           include-major: true
+          include-latest: true
